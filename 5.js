@@ -1,31 +1,80 @@
-class DeviceName{
-    constructor(name){
-    this.devise='desktop';
-    this.name=name;
-}
-    getCondition(power, on, time){
-    let status = on;
-    if (on == 1) {
-        status='Вкл';
-    }else{
-        status='Выкл';
-    }
-    console.log(`${this.name} потребляет ${power*time} Вт за ${time} часа!!  `)
-}
+class ElectricalAppliance {
+        constructor(name, power){
+        this.name = name;
+        this.power = power;
+        this.isPlugged = false;
 }
 
-class DeviseColor extends DeviceName{
-    constructor(name,color) {
-        super(name);
-        this.color=color;
-    }
+        plugIn() {
+        this.isPlugged = true;
+        return (`${this.name} включен в розетку.`);
 }
 
-const lamp = new DeviseColor('Лампа', 'red');
-const computer = new DeviseColor('Компьютер', 'black');
+        unplug(){
+        this.isPlugged = false;
+        console.log(`${this.name} выключен из розетки.`);
+};
+
+
+}
+class DeskLamp extends ElectricalAppliance {
+        constructor(name, power, brightness){
+        super(name, power)
+        this.brightness = brightness;
+      }
+      adjustBrightness (newBrightness) {
+        this.brightness = newBrightness;
+        console.log(`${this.name}: яркость установлена на ${this.brightness}%.`);
+      };
+}
+
+
+
+class Computer extends ElectricalAppliance {
+        constructor(name, power, processor, ram){
+        super(name, power);
+        this.processor = processor;
+        this.ram = ram;
+        }
+
+        runProgram (programName) {
+        if (this.isPlugged) {
+                console.log(`${this.name}: запускаю программу ${programName}.`);
+        } else {
+                console.log(`${this.name}: не могу запустить ${programName}, компьютер выключен.`);
+        }
+};
+    
+}
+
+
+const lamp = new DeskLamp("Настольная лампа", 60, 75);
+const computer = new Computer("Компьютер", 300, "Intel Core i7", 16);
+
+
+lamp.plugIn();
+computer.plugIn();
 
 console.log(lamp);
-lamp.getCondition(40,1,2);
-
 console.log(computer);
-computer.getCondition(180,1,4);
+
+lamp.adjustBrightness(50);
+computer.runProgram("Visual Studio Code");
+lamp.unplug();
+
+ 
+function calculateTotalPower(appliances) {
+        let totalPower = 0;
+        for (let i = 0; i < appliances.length; i++) {
+          if (appliances[i].isPlugged) {
+            totalPower += appliances[i].power;
+          }
+        }
+        return totalPower;
+      }
+      
+const appliances = [lamp, computer];
+      
+const totalPower = calculateTotalPower(appliances);
+console.log(`Суммарная потребляемая мощность включенных приборов: ${totalPower} Вт.`);
+      
